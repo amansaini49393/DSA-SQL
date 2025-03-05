@@ -1,0 +1,60 @@
+Given the root of a binary tree, return the zigzag level order traversal of its nodes' values. (i.e., from left to right, then right to left for the next level and alternate between).
+
+Example 1:
+Input: root = [3,9,20,null,null,15,7]
+Output: [[3],[20,9],[15,7]]
+
+Example 2:
+Input: root = [1]
+Output: [[1]]
+
+Example 3:
+Input: root = []
+Output: []
+ 
+Constraints:
+The number of nodes in the tree is in the range [0, 2000].
+-100 <= Node.val <= 100
+
+
+
+# Definition for a binary tree node.
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+
+def zigzagLevelOrder(root: TreeNode):
+    if not root:
+        return []
+
+    result = []
+    queue = deque([root])
+    left_to_right = True  # This flag will help us alternate the order
+
+    while queue:
+        level_size = len(queue)
+        level_nodes = deque()  # Use deque to facilitate adding nodes from both ends
+
+        for _ in range(level_size):
+            node = queue.popleft()
+
+            # Depending on the current direction, add the node to the level_nodes
+            if left_to_right:
+                level_nodes.append(node.val)
+            else:
+                level_nodes.appendleft(node.val)
+
+            # Add the children of the current node to the queue
+            if node.left:
+                queue.append(node.left)
+            if node.right:
+                queue.append(node.right)
+
+        # After processing the current level, add it to the result
+        result.append(list(level_nodes))
+        # Toggle the direction for the next level
+        left_to_right = not left_to_right
+
+    return result
